@@ -5,16 +5,14 @@ using Lesson6_asp_hw.Validations.FluentValidations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services
+       .AddControllersWithViews()
+       .AddFluentValidation(cfg =>
+       {
+           cfg.RegisterValidatorsFromAssemblyContaining<UserValidator>();
+       });
 
 builder.Services.AddScoped<IRepository, UserRepository>();
-
-
-builder.Services.AddControllersWithViews()
-    .AddFluentValidation(fv =>
-    {
-        fv.RegisterValidatorsFromAssemblyContaining<UserValidator>();
-    });
 
 var app = builder.Build();
 
@@ -26,13 +24,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 app.Run();
